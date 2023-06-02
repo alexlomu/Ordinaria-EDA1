@@ -222,6 +222,19 @@ ax[2].set_title('Distribución de Jaccard Score para Tweets Neutrales')
 
 plt.tight_layout()
 plt.show()
+
+#Ahora voy a hacer una gráfica sobre la longitud de los textos seleccionados en el dataset Train
+# Obtener las longitudes de los textos seleccionados en el conjunto Train
+train['selected_text_length'] = train['selected_text'].apply(lambda x: len(str(x)))
+
+# Gráfica de las longitudes de los textos seleccionados en el conjunto Train
+plt.figure(figsize=(10, 6))
+plt.hist(train['selected_text_length'], bins=30, color='purple')
+plt.title('Distribución de Longitudes de los Textos Seleccionados (Train)')
+plt.xlabel('Longitud')
+plt.ylabel('Frecuencia')
+plt.show()
+
 ```
 
 Las gráficas obtenidas son las siguientes:
@@ -229,4 +242,11 @@ Las gráficas obtenidas son las siguientes:
 
 
 ![image](https://github.com/alexlomu/Ordinaria-EDA1/assets/91721507/60d48911-9069-4d2c-9ec8-c931fb335987)
+
+
+![image](https://github.com/alexlomu/Ordinaria-EDA1/assets/91721507/218bbd8c-b7bb-4373-bd2d-cfeb34237432)
+
+
+![image](https://github.com/alexlomu/Ordinaria-EDA1/assets/91721507/4f6c2939-7a56-4d96-ac94-7eac1c1c8e8d)
+
 
