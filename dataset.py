@@ -23,8 +23,46 @@ for dirname, _, filenames in os.walk('/kaggle/input'):
 
 
 
-train = pd.read_csv('/csv/train.csv') 
-test = pd.read_csv('/csv/test.csv') 
-ss = pd.read_csv('/csv/sample_submission.csv')
+train = pd.read_csv('csv/train.csv') 
+test = pd.read_csv('csv/test.csv') 
+ss = pd.read_csv('csv/sample_submission.csv')
 
-train.dropna() #Eliminamos los valores nulos del csv train
+train.dropna(inplace = True) #Eliminamos los valores nulos del csv train
+
+def jaccard(str1, str2):
+    a = set(str1.lower().split())
+    b = set(str2.lower().split())
+    c = a.intersection(b)
+    return float(len(c)) / (len(a) + len(b) - len(c))
+
+# Distribución de tweets en el conjunto Train
+sentiment_counts = train['sentiment'].value_counts()
+fig = go.Figure(data=[go.Pie(labels=sentiment_counts.index, values=sentiment_counts.values)])
+fig.update_layout(title='Distribución de Sentimientos en el Conjunto Train')
+fig.show()
+
+# Gráfico de embudo
+fig = px.funnel(sentiment_counts, title='Gráfico de Embudo de Sentimientos en el Conjunto Train')
+fig.show()
+
+# Características útiles para generar
+train['num_words_text'] = train['text'].apply(lambda x: len(str(x).split()))
+train['num_words_selected_text'] = train['selected_text'].apply(lambda x: len(str(x).split()))
+train['jaccard_score'] = train.apply(lambda row: jaccard(row['text'], row['selected_text']), axis=1)
+
+# Análisis de curtosis
+positive_tweets = train[train['sentiment'] == 'positive']['jaccard_score']
+negative_tweets = train[train['sentiment'] == 'negative']['jaccard_score']
+neutral_tweets = train[train['sentiment'] == 'neutral']['jaccard_score']
+
+fig, ax = plt.subplots(3, 1, figsize=(10, 12))
+ax[0].hist(positive_tweets, bins=30, alpha=0.5, color='green')
+ax[0].set_title('Distribución de Jaccard Score para Tweets Positivos')
+ax[1].hist(negative_tweets, bins=30, alpha=0.5, color='red')
+ax[1].set_title('Distribución de Jaccard Score para Tweets Negativos')
+ax[2].hist(neutral_tweets, bins=30, alpha=0.5, color='blue')
+ax[2].set_title('Distribución de Jaccard Score para Tweets Neutrales')
+
+plt.tight_layout()
+plt.show()
+
