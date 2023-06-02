@@ -1,4 +1,4 @@
-import matplotlib as plt
+import matplotlib.pyplot as plt
 import pandas as pd 
 from plotly import graph_objs as go 
 import plotly.express as px 
@@ -36,13 +36,13 @@ def jaccard(str1, str2):
     return float(len(c)) / (len(a) + len(b) - len(c))
 
 # Distribución de tweets en el conjunto Train
-sentiment_counts = train['sentiment'].value_counts()
-fig = go.Figure(data=[go.Pie(labels=sentiment_counts.index, values=sentiment_counts.values)])
+sentiment_counts_train = train['sentiment'].value_counts()
+fig = go.Figure(data=[go.Pie(labels=sentiment_counts_train.index, values=sentiment_counts_train.values)])
 fig.update_layout(title='Distribución de Sentimientos en el Conjunto Train')
 fig.show()
 
 # Gráfico de embudo
-fig = px.funnel(sentiment_counts, title='Gráfico de Embudo de Sentimientos en el Conjunto Train')
+fig = px.funnel(sentiment_counts_train, title='Gráfico de Embudo de Sentimientos en el Conjunto Train')
 fig.show()
 
 # Características útiles para generar
@@ -65,4 +65,17 @@ ax[2].set_title('Distribución de Jaccard Score para Tweets Neutrales')
 
 plt.tight_layout()
 plt.show()
+
+#Ahora voy a hacer una gráfica sobre la longitud de los textos seleccionados en el dataset Train
+# Obtener las longitudes de los textos seleccionados en el conjunto Train
+train['selected_text_length'] = train['selected_text'].apply(lambda x: len(str(x)))
+
+# Gráfica de las longitudes de los textos seleccionados en el conjunto Train
+plt.figure(figsize=(10, 6))
+plt.hist(train['selected_text_length'], bins=30, color='purple')
+plt.title('Distribución de Longitudes de los Textos Seleccionados (Train)')
+plt.xlabel('Longitud')
+plt.ylabel('Frecuencia')
+plt.show()
+
 
